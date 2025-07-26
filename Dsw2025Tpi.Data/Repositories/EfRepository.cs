@@ -1,6 +1,10 @@
 ﻿using Dsw2025Tpi.Domain.Entities;
 using Dsw2025Tpi.Domain.Interfaces;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
+
 
 namespace Dsw2025Tpi.Data.Repositories;
 

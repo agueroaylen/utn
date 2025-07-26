@@ -22,7 +22,8 @@ namespace Dsw2025Tpi.Domain.Entities
         [Range(1, int.MaxValue)]
         public int Quantity { get; set; }
 
-        public decimal Subtotal => UnitPrice * Quantity;
+        public decimal Subtotal { get; set; }
+
 
         public Order? Order { get; set; }
     }

@@ -7,6 +7,9 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Text.Json;
 using Dsw2025Tpi.Domain.Entities;
+using Dsw2025Tpi.Application.Services;
+
+
 
 namespace Dsw2025Tpi.Api;
 
@@ -55,6 +58,7 @@ public class Program
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
 
+        // 🧪 Swagger
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -86,6 +90,10 @@ public class Program
             });
         });
 
+        // ✅ REGISTRO DE SERVICIOS PERSONALIZADOS
+        builder.Services.AddScoped<ProductService>();
+        builder.Services.AddScoped<OrderService>();
+
         builder.Services.AddHealthChecks();
 
         var app = builder.Build();
@@ -94,7 +102,7 @@ public class Program
         {
             var context = scope.ServiceProvider.GetRequiredService<Dsw2025TpiContext>();
 
-            // Usuario admin
+            // Usuario admin por defecto
             if (!context.Users.Any())
             {
                 context.Users.Add(new User
@@ -124,20 +132,23 @@ public class Program
                     Console.WriteLine("❌ Error al deserializar el archivo.");
                 }
 
-                context.SaveChanges(); // 💾 Importante: guardar cambios
+                context.SaveChanges(); // 💾 Guardar
             }
         }
 
         // Middlewares
         app.UseSwagger();
         app.UseSwaggerUI();
+
         app.UseMiddleware<Dsw2025Tpi.Api.Middleware.ErrorHandlingMiddleware>();
+
         app.UseHttpsRedirection();
         app.UseCors("AllowAll");
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
         app.MapHealthChecks("/healthcheck");
+
         app.Run();
     }
 }
